@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import config from '../config'
+import { Redirect } from 'react-router-dom';
 
 export default class EditTodo extends React.Component {
 
@@ -9,7 +11,7 @@ export default class EditTodo extends React.Component {
 
     componentDidMount(){
         let id = this.props.match.params.id
-        axios.get(`http://localhost:5000/api/todos/${id}`)
+        axios.get(`${config.API_URL}/todos/${id}`, {withCredentials: true})
             .then((res) => {
                 this.setState({
                     todo: res.data
@@ -20,10 +22,10 @@ export default class EditTodo extends React.Component {
     handleEdit = (e) => {
         e.preventDefault();
         let id = this.props.match.params.id
-        axios.patch(`http://localhost:5000/api/todos/${id}`, {
+        axios.patch(`${config.API_URL}/todos/${id}`, {
             name: this.state.todo.name,
             description: this.state.todo.description
-        })
+        }, {withCredentials: true})
             .then((res) => {
                //redirect to App.js
             })
@@ -49,6 +51,9 @@ export default class EditTodo extends React.Component {
     
 
     render(){
+        if (!this.props.loggedInUser) {
+            return <Redirect to='/sign-in' />
+        }
         if (!this.state.todo){
             return(
                 <div class="text-center">

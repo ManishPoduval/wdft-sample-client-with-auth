@@ -1,18 +1,23 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 export default function AddTodo(props){
+
+    if (!props.loggedInUser) {
+        return <Redirect to='/sign-in' />
+    }
     return (
         <>
             <form onSubmit={props.onAdd}>
-                <div class="form-group">
+                <div className="form-group">
                     <label htmlFor="name">Name</label>
-                    <input type="text" class="form-control" name="name" id="name" />
+                    <input type="text" className="form-control" name="name" id="name" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <input type="text" class="form-control" name="description" id="description" />
+                    <input type="text" className="form-control" name="description" id="description" />
                 </div>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" className="btn btn-primary">Create</button>
             </form>
         </>
     )
