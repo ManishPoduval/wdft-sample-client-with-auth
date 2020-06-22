@@ -61,23 +61,36 @@ class App extends React.Component {
       let name = e.target.name.value
       let description = e.target.description.value
 
+      let myImage = e.target.image.files[0]
+
+      let uploadData = new FormData();
+      uploadData.append('imageUrl', myImage)
+
+      //cloudinary request 
+      axios.post(`${config.API_URL}/upload`, uploadData)
+          .then((res) => {
+              console.log(res)
+              //Send the image to server here if needed with any other axios call
+          })
+       
+          
       axios.post(`${config.API_URL}/create`, {
         name: name,
         description: description
       }, {withCredentials: true})
-      .then((res) => {
-        this.setState({
-          todos: [...this.state.todos, res.data]
-        }, () => {
-          this.props.history.push('/')
-        })
-        // this.setState({} , function)
-      })
-      .catch((err) => {
-        if(err.response.status === 401) {
-          this.props.history.push('/sign-in')
-        }
-      })
+          .then((res) => {
+            this.setState({
+              todos: [...this.state.todos, res.data]
+            }, () => {
+              this.props.history.push('/')
+            })
+            // this.setState({} , function)
+          })
+          .catch((err) => {
+            if(err.response.status === 401) {
+              this.props.history.push('/sign-in')
+            }
+          })        
   }
 
   handleDelete = (id) => {
@@ -95,7 +108,7 @@ class App extends React.Component {
   }
 
   handleLogout = () => {
-    console.log(document.cookie)
+    //console.log(document.cookie)
     axios.post(`${config.API_URL}/logout`, {}, { withCredentials: true})
     .then((res) => {
       console.log(res)
